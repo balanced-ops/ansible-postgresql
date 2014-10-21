@@ -1,4 +1,11 @@
 ---
+
+- name: configure memory
+  command: sysctl -w kernel.shmmax={{ shmmax }}
+
+- name: configure memory
+  command: sysctl -w kernel.shmall={{ shmall }}
+
 - name: Install Postgresql server and client
   apt: pkg={{ item }}-{{ postgresql.version }} state=installed update-cache=yes
   register: postgresql_install
@@ -16,10 +23,21 @@
     - packages
 
 - name: Install PostgreSQL config file
-  template: src=postgresql.conf.j2
+  template: src=postgresql/postgresql.conf.j2
             dest=/etc/postgresql/{{ postgresql.version }}/main/postgresql.conf
             owner={{ postgresql.user }} group={{ postgresql.group }}
   notify:
     - restart postgresql
+  tags:
+    - configuration
+
+- template: src=postgresql/{{ item }}.j2
+            dest=/etc/postgresql/{{ postgresql.version }}/main/{{ item }}
+            owner={{ postgresql.user }} group={{ postgresql.group }}
+  with_items:
+    - pg_hba.conf
+    - environment
+  notify:
+    - reload postgresql
   tags:
     - configuration

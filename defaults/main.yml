@@ -1,4 +1,8 @@
 ---
+
+shmmax: 2147483648  # 2 * (1024 ^ 3)
+shmall: 4194304
+
 postgresql:
   version: 9.1
   repo: 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
@@ -8,13 +12,77 @@ postgresql:
   group: postgres
 
   config:
-    shared_buffers: "{{ ansible_memtotal_mb / 4 }}MB"
-    work_mem: 1MB
+    data_dir: /var/lib/postgresql/
 
+    # - Connection Settings -
+    listen_address: '*'
+    max_connections: 100
+    port: 5432
+
+    # - Memory -
+    # https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server
+    shared_buffers: "{{ (ansible_memtotal_mb / 4) | int }}MB"
+    work_mem: 1MB
+    temp_buffers: 8MB
+    max_prepared_transactions: 0
+    maintenance_work_mem: 16MB
+    max_stack_depth: 2MB
+
+    # - wal -
+    wal_level: hot_standby
     checkpoint_segments: 3
     checkpoint_completion_target: 0.5
 
-    effective_cache_size: "{{ ansible_memtotal_mb / 4 * 3 }}MB"
+    # - Archiving -
+    archive_mode: off
+    archive_command: ''
+    archive_timeout: 0
+
+    # - replication -
+    max_wal_senders: 0
+    wal_keep_segments: 0
+    replication_timeout: 60s
+
+    # master server
+    synchronous_standby_names: ''
+
+    # standbys
+    hot_standby: 'off'
+    max_standby_archive_delay: 30s
+    max_standby_streaming_delay: 30s
+    wal_receiver_status_interval: 10s
+    hot_standby_feedback: 'off'
+
+    # query tuning
+    seq_page_cost: 1.0
+    random_page_cost: 3.0
+    cpu_tuple_cost: 0.01
+    cpu_index_tuple_cost: 0.005
+    cpu_operator_cost: 0.0025
+    effective_cache_size: "{{ (ansible_memtotal_mb / 4 * 3) | int }}MB"
+
+    # logging
+    log_destination: 'stderr'
+    log_directory: 'pg_log'
+    log_filename: 'postgresql-%Y-%m-%d_%H%M%S.log'
+    log_file_mode: '0600'
+    log_truncate_on_rotation: 'off'
+    log_rotation_age: 1d
+    log_rotation_size: 10MB
+    logging_collector: 'off'
+    syslog_facility: LOCAL0
+    syslog_ident: postgres
+    client_min_messages: notice
+    log_min_messages: warning
+    log_min_error_statement: error
+    log_min_duration_statement: -1
+
+postgresql_hba:
+  - type: host
+    database: all
+    user: postgres
+    address: 127.0.0.1/32
+    method: trust
 
 pgbouncer:
   user: postgres
