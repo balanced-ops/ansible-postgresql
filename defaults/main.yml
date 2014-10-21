@@ -1,19 +1,20 @@
+---
 postgresql:
-  version: 9.2
+  version: 9.1
   repo: 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
-  install_development_headers: true
+  install_development_headers: false
 
   user: postgres
   group: postgres
 
   config:
-    shared_buffers: 24MB
+    shared_buffers: "{{ ansible_memtotal_mb / 4 }}MB"
     work_mem: 1MB
 
     checkpoint_segments: 3
     checkpoint_completion_target: 0.5
 
-    effective_cache_size: 128MB
+    effective_cache_size: "{{ ansible_memtotal_mb / 4 * 3 }}MB"
 
 pgbouncer:
   user: postgres

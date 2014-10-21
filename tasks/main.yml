@@ -1,0 +1,10 @@
+---
+
+- include: repository.yml
+  tags: postgresql
+
+- include: postgresql.yml
+  tags: postgresql
+
+- include: pgbouncer.yml
+  tags: pgbouncer
