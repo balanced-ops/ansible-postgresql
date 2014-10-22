@@ -6,9 +6,9 @@
 - command: /sbin/sysctl -p /etc/sysctl.d/30-postgresql-shm.conf
 
 - group: name={{ postgresql.group }}
-- user: name={{ postgresql.user }} group={{ postgresql.group }} home=/var/lib/postgres shell=/bin/bash
+- user: name={{ postgresql.user }} group={{ postgresql.group }} home={{ postgresql.config.data_dir }} shell=/bin/bash
 
-- file: path={{ postgresql.config.data_dir }} state=directory owner={{ postgresql.user }}
+- file: path={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main state=directory owner={{ postgresql.user }} recurse=yes
 
 - name: Install Postgresql server and client
   apt: pkg={{ item }}-{{ postgresql.version }} state=installed
@@ -25,6 +25,14 @@
     - libpq-dev
   tags:
     - packages
+
+- stat: path={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/base
+  register: pgd
+
+# if the directory that we need to initialize does not exist then stop the
+# service while we install everything.
+- service: name=postgresql state=stopped
+  when: pgd.stat.exists == false
 
 - name: Install PostgreSQL config file
   template: src=postgresql/postgresql.conf.j2
@@ -45,3 +53,17 @@
     - reload postgresql
   tags:
     - configuration
+
+- command: /usr/lib/postgresql/9.1/bin/pg_ctl initdb -D {{ postgresql.config.data_dir }}/{{ postgresql.version }}/main
+  sudo: yes
+  sudo_user: "{{ postgresql.user }}"
+  when: pgd.stat.exists == false
+  notify:
+    - restart postgresql
+
+# not required but these files always trip me up, easier if they never existed
+- file: path={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/{{ item }} state=absent
+  with_items:
+    - postgresql.conf
+    - pg_hba.conf
+    - pg_ident.conf

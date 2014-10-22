@@ -17,14 +17,14 @@
   ignore_errors: yes
 
 # environment
-- template: src=postgresql/profile.j2 dest=/var/lib/postgresql/.profile owner={{ postgresql.user }} group={{ postgresql.group }} mode='0754'
+- template: src=postgresql/profile.j2 dest={{ postgresql.config.data_dir }}/.profile owner={{ postgresql.user }} group={{ postgresql.group }} mode='0754'
 
 # ssh access for replication
-- file: path=/var/lib/postgresql/.ssh state=directory owner={{ postgresql.user }} mode='0700'
-- template: src=postgresql/ssh.config.j2 dest=/var/lib/postgresql/.ssh/config owner={{ postgresql.user }} group={{ postgresql.group }} mode='0600'
-- copy: content="{{ lookup('citadel', '/db/ssh/id_rsa').strip() }}" dest=/var/lib/postgresql/.ssh/id_rsa owner={{ postgresql.user }} mode='0600' force=yes
-- copy: content="{{ lookup('citadel', '/db/ssh/id_rsa.pub').strip() }}" dest=/var/lib/postgresql/.ssh/id_rsa.pub owner={{ postgresql.user }} mode='0644' force=yes
-- copy: content={{ lookup('citadel', '/db/ssh/id_rsa.pub') }} dest=/var/lib/postgresql/.ssh/authorized_keys owner={{ postgresql.user }} mode='0644' force=yes
+- file: path={{ postgresql.config.data_dir }}/.ssh state=directory owner={{ postgresql.user }} mode='0700'
+- template: src=postgresql/ssh.config.j2 dest={{ postgresql.config.data_dir }}/.ssh/config owner={{ postgresql.user }} group={{ postgresql.group }} mode='0600'
+- copy: content="{{ postgresql_user.id_rsa }}" dest={{ postgresql.config.data_dir }}/.ssh/id_rsa owner={{ postgresql.user }} mode='0600' force=yes
+- copy: content="{{ postgresql_user.id_rsa_pub }}" dest={{ postgresql.config.data_dir }}/.ssh/id_rsa.pub owner={{ postgresql.user }} mode='0644' force=yes
+- copy: content={{ postgresql_user.authorized_keys }} dest={{ postgresql.config.data_dir }}/.ssh/authorized_keys owner={{ postgresql.user }} mode='0644' force=yes
 
 # recovery.conf - managed by repmgr but needs a custom restore command for wal-e
 
