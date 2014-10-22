@@ -38,3 +38,5 @@
 
 - file: path="{{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/recovery.conf" state=absent
   when: postgresql.role == 'master'
+
+- template: src=postgresql/logrotate.j2 dest=/etc/logrotate.d/postgresql-common

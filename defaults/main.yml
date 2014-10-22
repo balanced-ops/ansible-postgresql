@@ -14,7 +14,7 @@ postgresql:
   role: master  # slave|master - slave gets recovery.conf
 
   config:
-    data_dir: /var/lib/pgsql/
+    data_dir: /var/lib/postgresql/
 
     # - Connection Settings -
     listen_address: '*'
@@ -39,8 +39,8 @@ postgresql:
 
     # - Archiving -
     archive_mode: 'on'
-    archive_command: '. /var/lib/pgsql/.profile && wal-e wal-push %p'
-    restore_command: '. /var/lib/pgsql/.profile && wal-e wal-fetch "%f" "%p"'
+    archive_command: '. /var/lib/postgresql/.profile && wal-e wal-push %p'
+    restore_command: '. /var/lib/postgresql/.profile && wal-e wal-fetch "%f" "%p"'
     archive_timeout: 0
 
     # - replication -
@@ -139,12 +139,12 @@ pgbouncer:
     database_host: 127.0.0.1
     database_port: 5432
 
-    listen_addr: 127.0.0.1
+    listen_addr: '*'
     listen_port: 6432
 
     user: postgres
 
-    auth_type: md5
+    auth_type: any
     auth_file: /etc/pgbouncer/userlist.txt
 
 wal_e:
