@@ -11,16 +11,20 @@ postgresql:
   user: postgres
   group: postgres
 
+  role: master  # slave|master - slave gets recovery.conf
+
   config:
     data_dir: /var/lib/postgresql/
 
     # - Connection Settings -
     listen_address: '*'
+    # set to 500 in prod
     max_connections: 100
     port: 5432
 
     # - Memory -
     # https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server
+    # set to "{{ (ansible_memtotal_mb / 4) | int }}MB" in prod
     shared_buffers: "{{ (ansible_memtotal_mb / 6) | int }}MB"
     work_mem: 1MB
     temp_buffers: 8MB

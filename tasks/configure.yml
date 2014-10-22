@@ -34,3 +34,7 @@
     state: present
     line: "restore_command = '{{ postgresql.config.restore_command }}'"
     regexp: "^restore_command"
+  when: postgresql.role == 'slave'
+
+- file: path="{{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/recovery.conf" state=absent
+  when: postgresql.role == 'master'
