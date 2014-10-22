@@ -144,8 +144,11 @@ pgbouncer:
 
     user: postgres
 
-    auth_type: any
+    auth_type: trust
     auth_file: /etc/pgbouncer/userlist.txt
+
+pgbouncer_users:
+  - postgres
 
 wal_e:
 

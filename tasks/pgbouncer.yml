@@ -8,6 +8,10 @@
   notify:
     - restart pgbouncer
 
+- template: src=pgbouncer/users.txt.j2 dest={{ pgbouncer.config.auth_file }} owner={{ pgbouncer.user }}
+  notify:
+    - reload pgbouncer
+
 - lineinfile: dest=/etc/default/pgbouncer regexp=^START=1$ line=START=1 state=present
   notify:
     - restart pgbouncer
