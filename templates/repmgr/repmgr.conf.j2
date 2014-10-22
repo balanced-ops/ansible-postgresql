@@ -1,0 +1,62 @@
+###################################################
+# Replication Manager configuration file
+###################################################
+
+# Cluster name
+cluster={{ repmgr.config.cluster_name }}
+
+# Node ID
+#node=2
+#node_name=standby2
+
+# Connection information
+#conninfo='host=192.168.204.104'
+rsync_options=--archive --checksum --compress --progress --rsh="ssh -o \"StrictHostKeyChecking no\""
+ssh_options=-o "StrictHostKeyChecking no"
+
+# How many seconds we wait for master response before declaring master failure
+master_response_timeout=60
+
+# How many time we try to reconnect to master before starting failover procedure
+reconnect_attempts=6
+reconnect_interval=10
+
+# Autofailover options
+failover=manual
+priority=-1
+promote_command='repmgr standby promote -f {{ repmgr.config.conf_dir }}/repmgr.conf'
+follow_command='repmgr standby follow -f {{ repmgr.config.conf_dir }}/repmgr.conf -W'
+
+# Log level: possible values are DEBUG, INFO, NOTICE, WARNING, ERR, ALERT, CRIT or EMERG
+# Default: NOTICE
+loglevel=NOTICE
+
+# Logging facility: possible values are STDERR or - for Syslog integration - one of LOCAL0, LOCAL1, ..., LOCAL7, USER
+# Default: STDERR
+logfacility=STDERR
+
+# path to pg_ctl executable
+pg_bindir=/usr/bin/
+
+#
+# you may add command line arguments for pg_ctl
+#
+# pg_ctl_options='-s'
+
+#
+# redirect stderr to a logfile
+#
+# logfile='/var/log/repmgr.log'
+
+#
+# change monitoring interval; default is 2s
+#
+# monitor_interval_secs=2
+
+#
+# change wait time for master; before we bail out and exit when the
+# master disappears, we wait 6 * retry_promote_interval_secs seconds;
+# by default this would be half an hour (since sleep_delay default
+# value is 300)
+#
+# retry_promote_interval_secs=300

@@ -1,0 +1,36 @@
+- apt:
+    pkg={{ item }} state=present
+  with_items: python-psycopg2
+
+- command: createuser -s {{ item }}
+  sudo: yes
+  sudo_user: postgres
+  with_items:
+    - "{{ postgresql_users }}"
+  ignore_errors: yes
+
+- command: createdb {{ item }} -O {{ item }}
+  sudo: yes
+  sudo_user: postgres
+  with_items:
+    - "{{ postgresql_databases }}"
+  ignore_errors: yes
+
+# environment
+- template: src=postgresql/profile.j2 dest=/var/lib/postgresql/.profile owner={{ postgresql.user }} group={{ postgresql.group }} mode='0754'
+
+# ssh access for replication
+- file: path=/var/lib/postgresql/.ssh state=directory owner={{ postgresql.user }} mode='0700'
+- template: src=postgresql/ssh.config.j2 dest=/var/lib/postgresql/.ssh/config owner={{ postgresql.user }} group={{ postgresql.group }} mode='0600'
+- copy: content="{{ lookup('citadel', '/db/ssh/id_rsa').strip() }}" dest=/var/lib/postgresql/.ssh/id_rsa owner={{ postgresql.user }} mode='0600' force=yes
+- copy: content="{{ lookup('citadel', '/db/ssh/id_rsa.pub').strip() }}" dest=/var/lib/postgresql/.ssh/id_rsa.pub owner={{ postgresql.user }} mode='0644' force=yes
+- copy: content={{ lookup('citadel', '/db/ssh/id_rsa.pub') }} dest=/var/lib/postgresql/.ssh/authorized_keys owner={{ postgresql.user }} mode='0644' force=yes
+
+# recovery.conf - managed by repmgr but needs a custom restore command for wal-e
+
+- lineinfile:
+    dest: "{{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/recovery.conf"
+    create: yes
+    state: present
+    line: "restore_command = '{{ postgresql.config.restore_command }}'"
+    regexp: "^restore_command"

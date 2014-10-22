@@ -21,7 +21,7 @@ postgresql:
 
     # - Memory -
     # https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server
-    shared_buffers: "{{ (ansible_memtotal_mb / 4) | int }}MB"
+    shared_buffers: "{{ (ansible_memtotal_mb / 6) | int }}MB"
     work_mem: 1MB
     temp_buffers: 8MB
     max_prepared_transactions: 0
@@ -34,20 +34,21 @@ postgresql:
     checkpoint_completion_target: 0.5
 
     # - Archiving -
-    archive_mode: off
-    archive_command: ''
+    archive_mode: 'on'
+    archive_command: '. /var/lib/postgresql/.profile && wal-e wal-push %p'
+    restore_command: '. /var/lib/postgresql/.profile && wal-e wal-fetch "%f" "%p"'
     archive_timeout: 0
 
     # - replication -
-    max_wal_senders: 0
-    wal_keep_segments: 0
+    max_wal_senders: 10
+    wal_keep_segments: 5000
     replication_timeout: 60s
 
     # master server
     synchronous_standby_names: ''
 
     # standbys
-    hot_standby: 'off'
+    hot_standby: 'on'
     max_standby_archive_delay: 30s
     max_standby_streaming_delay: 30s
     wal_receiver_status_interval: 10s
@@ -55,6 +56,7 @@ postgresql:
 
     # query tuning
     seq_page_cost: 1.0
+    # tuned from default value of 4.0
     random_page_cost: 3.0
     cpu_tuple_cost: 0.01
     cpu_index_tuple_cost: 0.005
@@ -62,7 +64,7 @@ postgresql:
     effective_cache_size: "{{ (ansible_memtotal_mb / 4 * 3) | int }}MB"
 
     # logging
-    log_destination: 'stderr'
+    log_destination: 'syslog'
     log_directory: 'pg_log'
     log_filename: 'postgresql-%Y-%m-%d_%H%M%S.log'
     log_file_mode: '0600'
@@ -75,7 +77,10 @@ postgresql:
     client_min_messages: notice
     log_min_messages: warning
     log_min_error_statement: error
-    log_min_duration_statement: -1
+    # log sql messages that took > 250ms to complete
+    log_min_duration_statement: 250
+    log_line_prefix: '%t [%p]: [%l-1] user=%u,db=%d'
+    log_lock_waits: on
 
 postgresql_hba:
   - type: host
@@ -83,6 +88,34 @@ postgresql_hba:
     user: postgres
     address: 127.0.0.1/32
     method: trust
+  - type: host
+    database: repmgr
+    user: repmgr
+    address: 10.0.0.0/8
+    method: trust
+  - type: host
+    database: replication
+    user: all
+    address: 10.0.0.0/8
+    method: trust
+
+postgresql_databases: []
+#    - repmgr
+#    - balanced
+#    - precog
+
+postgresql_users: []
+#    - repmgr
+#    - balanced
+#    - precog
+
+repmgr:
+  user: postgres
+  group: postgres
+
+  config:
+    conf_dir: /etc/repmgr
+    cluster_name: test
 
 pgbouncer:
   user: postgres
@@ -99,3 +132,12 @@ pgbouncer:
 
     auth_type: md5
     auth_file: /etc/pgbouncer/userlist.txt
+
+wal_e:
+
+  config:
+    version: 0.7.3
+    AWS_ACCESS_KEY_ID: "{{ lookup('citadel', '/db/wal_e_aws_access_key_id').strip() }}"
+    AWS_SECRET_ACCESS_KEY: "{{ lookup('citadel', '/db/wal_e_aws_secret_access_key').strip() }}"
+    WALE_S3_PREFIX: s3://balanced-wal-e
+    WALE_S3_SUFFIX: foo

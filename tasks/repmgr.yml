@@ -1,0 +1,11 @@
+- file: path={{ repmgr.config.conf_dir }} state=directory owner={{ repmgr.user }}
+
+- name: install repmgr
+  apt: pkg="{{item}}" state=present
+  with_items:
+    - repmgr
+    - postgresql-{{ postgresql.version }}-repmgr
+
+- template: src=repmgr/repmgr.conf.j2
+            dest={{ repmgr.config.conf_dir }}/repmgr.conf
+            owner={{ repmgr.user }} group={{ repmgr.group }}

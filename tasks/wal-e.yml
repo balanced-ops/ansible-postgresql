@@ -1,0 +1,8 @@
+- apt: pkg={{ item }} state=installed
+  with_items:
+    - lzop
+    - pv
+    - python-pip
+    - python-dev
+
+- pip: name=wal-e version={{ wal_e.config.version }}

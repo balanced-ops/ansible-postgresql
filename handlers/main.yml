@@ -10,3 +10,6 @@
 
 - name: reload pgbouncer
   service: name=pgbouncer state=reloaded
+
+- name: execute sysctl
+  command: /sbin/sysctl -p /etc/sysctl.d/30-postgresql-shm.conf

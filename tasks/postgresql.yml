@@ -1,13 +1,17 @@
 ---
 
-- name: configure memory
-  command: sysctl -w kernel.shmmax={{ shmmax }}
+- template: src=sysctl-shm.conf.j2 dest=/etc/sysctl.d/30-postgresql-shm.conf
+  notify: execute sysctl
 
-- name: configure memory
-  command: sysctl -w kernel.shmall={{ shmall }}
+- command: /sbin/sysctl -p /etc/sysctl.d/30-postgresql-shm.conf
+
+- group: name={{ postgresql.group }}
+- user: name={{ postgresql.user }} group={{ postgresql.group }} home=/var/lib/postgres shell=/bin/bash
+
+- file: path={{ postgresql.config.data_dir }} state=directory owner={{ postgresql.user }}
 
 - name: Install Postgresql server and client
-  apt: pkg={{ item }}-{{ postgresql.version }} state=installed update-cache=yes
+  apt: pkg={{ item }}-{{ postgresql.version }} state=installed
   register: postgresql_install
   with_items:
     - postgresql
@@ -15,7 +19,7 @@
     - packages
 
 - name: Install development header files
-  apt: pkg={{ item }} state=installed update-cache=yes
+  apt: pkg={{ item }} state=installed
   when: postgresql.install_development_headers == true
   with_items:
     - libpq-dev

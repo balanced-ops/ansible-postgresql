@@ -8,3 +8,12 @@
 
 - include: pgbouncer.yml
   tags: pgbouncer
+
+- include: repmgr.yml
+  tags: repmgr
+
+- include: wal-e.yml
+  tags: wal-e
+
+- include: configure.yml
+  tags: [postgresql, postgresql-configure]
