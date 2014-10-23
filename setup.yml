@@ -1,8 +1,0 @@
----
-- name: 'PostgreSQL Playbook'
-  hosts: postgresql_nodes
-  user: root
-
-  roles:
-    - postgresql
-    - pgbouncer

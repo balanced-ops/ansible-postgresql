@@ -131,25 +131,6 @@ repmgr:
     conf_dir: /etc/repmgr
     cluster_name: test
 
-pgbouncer:
-  user: postgres
-  group: postgres
-
-  config:
-    database_host: 127.0.0.1
-    database_port: 5432
-
-    listen_addr: '*'
-    listen_port: 6432
-
-    user: postgres
-
-    auth_type: trust
-    auth_file: /etc/pgbouncer/userlist.txt
-
-pgbouncer_users:
-  - postgres
-
 wal_e:
 
   config:

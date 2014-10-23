@@ -1,5 +1,7 @@
 # Ansible PostgreSQL playbook
 
+[![Build Status](https://travis-ci.org/balanced-ops/ansible-postgresql.svg)](https://travis-ci.org/balanced-ops/ansible-postgresql)
+
 This is an Ansible playbook for deploying PostgreSQL 9.1, 9.2 or 9.3.
 
 This playbook was tested on Ubuntu 12.04 x86_64.
@@ -8,12 +10,8 @@ This playbook was tested on Ubuntu 12.04 x86_64.
 
 * Install PostgreSQL
 * Install development headers (optional)
-* Install pgbouncer (optional)
-
-## Notes
-
-* pgbouncer uses md5 authentication but doesn't install a userlist.txt file
-  (you need to do this as part of your other playbook)
+* Install wal-e (optional)
+* Install repmgr (optional)
 
 ## Requirements
 

@@ -7,8 +7,5 @@ install:
   - pip install ansible
 
 script:
-  - find . -name '*.yml' -not -path './.travis.yml'  -not -path './roles/*/files/*' | xargs -t -n1 ansible-playbook --syntax-check -i tests/ansible.inventory
-
-notifications:
-  email:
-    - tomaz+travisci@tomaz.me
+  - ansible-playbook -clocal -i tests/ansible.inventory test.yml --syntax-check
+  - ansible-playbook -clocal -i tests/ansible.inventory test.yml

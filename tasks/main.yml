@@ -6,9 +6,6 @@
 - include: postgresql.yml
   tags: postgresql
 
-- include: pgbouncer.yml
-  tags: pgbouncer
-
 - include: repmgr.yml
   tags: repmgr
 
