@@ -92,9 +92,9 @@ postgresql_user:
   # set this as specific as you like for the hosts that are connecting, it's to
   # allow non-strict host key checking in ssh.
   ssh_cidr: "10.*"
-  id_rsa: "{{ lookup('citadel', '/db/ssh/id_rsa').strip() }}"
-  id_rsa_pub: "{{ lookup('citadel', '/db/ssh/id_rsa.pub').strip() }}"
-  authorized_keys: "{{ lookup('citadel', '/db/ssh/authorized_keys').strip() }}"
+  id_rsa: "some ssh key here"
+  id_rsa_pub: "some ssh public key here"
+  authorized_keys: "some ssh publick key here"
 
 postgresql_hba:
   - type: host
@@ -135,7 +135,7 @@ wal_e:
 
   config:
     version: 0.7.3
-    AWS_ACCESS_KEY_ID: "{{ lookup('citadel', '/db/wal_e_aws_access_key_id').strip() }}"
-    AWS_SECRET_ACCESS_KEY: "{{ lookup('citadel', '/db/wal_e_aws_secret_access_key').strip() }}"
-    WALE_S3_PREFIX: s3://balanced-wal-e
+    AWS_ACCESS_KEY_ID: "an IAM aws access key"
+    AWS_SECRET_ACCESS_KEY: "an IAM aws secret access key"
+    WALE_S3_PREFIX: s3://your-bucket-name
     WALE_S3_SUFFIX: foo
