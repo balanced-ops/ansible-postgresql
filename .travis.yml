@@ -8,6 +8,7 @@ install:
 
 script:
   # HACK: travis has a postgres user running who's getting in our way
+  - sudo cat /etc/passwd
   - sudo pkill -u postgres -9
   - ansible-playbook -clocal -i tests/ansible.inventory test.yml --syntax-check
   - ansible-playbook -clocal -i tests/ansible.inventory test.yml
