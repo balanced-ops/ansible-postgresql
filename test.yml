@@ -1,5 +1,9 @@
 ---
 - hosts: all
   sudo: yes
+  vars_files:
+    - ./defaults/main.yml
+  handlers:
+    - include: ./handlers/main.yml
   tasks:
-   - include: ./tasks/main.yml
+    - include: ./tasks/main.yml
