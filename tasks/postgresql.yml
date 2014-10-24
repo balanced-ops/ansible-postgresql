@@ -6,8 +6,7 @@
 - command: /sbin/sysctl -p /etc/sysctl.d/30-postgresql-shm.conf
 
 - group: name={{ postgresql.group }}
-- user: name={{ postgresql.user }} group={{ postgresql.group }} home={{ postgresql.config.data_dir }} shell=/bin/bash
-  ignore_errors: yes
+- user: name={{ postgresql.user }} group={{ postgresql.group }} home={{ postgresql.config.data_dir }}
 
 - file: path={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main state=directory owner={{ postgresql.user }} recurse=yes
 

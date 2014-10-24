@@ -3,6 +3,7 @@
   sudo: yes
   vars_files:
     - ./defaults/main.yml
+    - ./test_vars.yml
   handlers:
     - include: ./handlers/main.yml
   tasks:
