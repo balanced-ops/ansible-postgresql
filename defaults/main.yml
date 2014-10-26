@@ -132,6 +132,9 @@ repmgr:
     cluster_name: test
     log_directory: '/var/log/postgresql'
 
+repmgr_node_id:
+repmgr_node_name:
+
 wal_e:
 
   config:

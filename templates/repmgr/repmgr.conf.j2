@@ -6,8 +6,12 @@
 cluster={{ repmgr_cluster_name | default(repmgr.config.cluster_name) }}
 
 # Node ID
-#node=2
-#node_name=standby2
+{% if repmgr_node_id %}
+node={{ repmgr_node_id }}
+{% endif %}
+{% if repmgr_node_name %}
+node_name={{ repmgr_node_name }}
+{% endif %}
 
 # Connection information
 #conninfo='host=192.168.204.104'
