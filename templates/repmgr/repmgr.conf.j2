@@ -3,7 +3,7 @@
 ###################################################
 
 # Cluster name
-cluster={{ repmgr.config.cluster_name }}
+cluster={{ repmgr_cluster_name | default(repmgr.config.cluster_name) }}
 
 # Node ID
 #node=2
@@ -46,7 +46,7 @@ pg_bindir=/usr/bin/
 #
 # redirect stderr to a logfile
 #
-# logfile='/var/log/repmgr.log'
+logfile='{{ repmgr.config.log_directory }}/repmgr.log'
 
 #
 # change monitoring interval; default is 2s

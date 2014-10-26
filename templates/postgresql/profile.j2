@@ -3,4 +3,4 @@ export PATH="$PATH:/usr/lib/postgresql/{{ postgresql.version }}/bin"
 alias ll="ls -alF"
 export AWS_ACCESS_KEY_ID='{{ wal_e.config.AWS_ACCESS_KEY_ID }}'
 export AWS_SECRET_ACCESS_KEY='{{ wal_e.config.AWS_SECRET_ACCESS_KEY }}'
-export WALE_S3_PREFIX='{{ wal_e.config.WALE_S3_PREFIX }}/{{ wal_e.config.WALE_S3_SUFFIX }}'
+export WALE_S3_PREFIX='{{ wal_e.config.WALE_S3_PREFIX }}/{{ wal_e_s3_suffix | default(wal_e.config.WALE_S3_SUFFIX) }}'

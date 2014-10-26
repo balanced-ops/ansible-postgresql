@@ -69,7 +69,7 @@ postgresql:
 
     # logging
     log_destination: 'stderr'
-    log_directory: '/var/log/postgresql/'
+    log_directory: '/var/log/postgresql'
     log_filename: 'postgresql.log'
     log_file_mode: '0644'
     log_truncate_on_rotation: 'off'
@@ -130,6 +130,7 @@ repmgr:
   config:
     conf_dir: /etc/repmgr
     cluster_name: test
+    log_directory: '/var/log/postgresql'
 
 wal_e:
 
