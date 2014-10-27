@@ -5,7 +5,7 @@
 # well, you will have to coordinate the size settings between them.
 
 # Maximum size of a single shared memory segment in bytes
-kernel.shmmax = {{ shmmax }}
+kernel.shmmax = {{ dynamic_shmmax.stdout | default(shmmax) }}
 
 # Maximum total size of all shared memory segments in pages (normally 4096 bytes)
 kernel.shmall = {{ shmall }}
