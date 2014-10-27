@@ -1,0 +1,12 @@
+recovery_target_timeline = 'latest'
+{% if postgresql.config.role == 'master' %}
+standby_mode = 'off'
+{% else %}
+standby_mode = 'on'
+{% endif %}
+{% if postgresql_repl_master.host %}
+primary_conninfo = 'host={{ postgresql_repl_master.host }} port={{ postgresql_repl_master.port }} user={{ postgresql_repl_master.user }}'
+{% endif %}
+{% if postgresql.config.restore_command %}
+restore_command = '{{ postgresql.config.restore_command }}'
+{% endif %}

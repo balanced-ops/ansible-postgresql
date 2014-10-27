@@ -26,7 +26,12 @@
 - copy: content="{{ postgresql_user.id_rsa_pub }}" dest={{ postgresql.config.data_dir }}/.ssh/id_rsa.pub owner={{ postgresql.user }} mode='0644' force=yes
 - copy: content={{ postgresql_user.authorized_keys }} dest={{ postgresql.config.data_dir }}/.ssh/authorized_keys owner={{ postgresql.user }} mode='0644' force=yes
 
-# recovery.conf - managed by repmgr but needs a custom restore command for wal-e
+# recovery.conf - managed by repmgr but needs a custom restore command for wal-e, write it out anyway in case repmgr is not used
+- stat: path={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/recovery.conf
+  register: recovery
+
+- template: src=postgresql/recovery.conf.j2 dest={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/recovery.conf owner={{ postgresql.user }} group={{ postgresql.group }} mode='0754'
+  when: postgresql.role == 'slave' and not recovery.stat.exists
 
 - lineinfile:
     dest: "{{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/recovery.conf"
@@ -38,5 +43,7 @@
 
 - file: path="{{ postgresql.config.data_dir }}/{{ postgresql.version }}/main/recovery.conf" state=absent
   when: postgresql.role == 'master'
+
+
 
 - template: src=postgresql/logrotate.j2 dest=/etc/logrotate.d/postgresql-common

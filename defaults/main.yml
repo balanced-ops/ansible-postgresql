@@ -135,6 +135,13 @@ repmgr:
 repmgr_node_id:
 repmgr_node_name:
 
+# if streaming replication from another server, put the master server here.
+postgresql_repl_master:
+
+    host:
+    port:
+    user:
+
 wal_e:
 
   config:
