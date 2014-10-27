@@ -1,16 +1,16 @@
 ---
 
 - include: repository.yml
-  tags: postgresql
+  tags: [postgresql, postgresql-configure]
 
 - include: postgresql.yml
-  tags: postgresql
+  tags: [postgresql, postgresql-install]
 
 - include: repmgr.yml
-  tags: repmgr
+  tags: [repmgr]
 
 - include: wal-e.yml
-  tags: wal-e
+  tags: [wal-e]
 
 - include: configure.yml
   tags: [postgresql, postgresql-configure]

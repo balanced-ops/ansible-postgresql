@@ -8,4 +8,4 @@ install:
 
 script:
   - ansible-playbook -clocal -i tests/ansible.inventory test.yml --syntax-check
-  - ansible-playbook -clocal -i tests/ansible.inventory test.yml
+  - ansible-playbook -clocal -i tests/ansible.inventory test.yml --skip-tags=postgresql-install

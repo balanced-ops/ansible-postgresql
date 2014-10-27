@@ -1,5 +1,0 @@
----
-
-postgresql:
-  config:
-    port: 5455
