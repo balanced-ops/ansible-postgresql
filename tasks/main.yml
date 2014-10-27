@@ -7,13 +7,13 @@
   tags: [postgresql, postgresql-install]
 
 - include: repmgr.yml
-  tags: [repmgr]
+  tags: [postgresql, repmgr]
 
 - include: wal-e.yml
-  tags: [wal-e]
+  tags: [postgresql, wal-e]
 
 - include: configure.yml
   tags: [postgresql, postgresql-configure]
 
 - include: tools.yml
-  tags: postgresql
+  tags: [postgresql]
