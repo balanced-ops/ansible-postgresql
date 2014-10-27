@@ -14,7 +14,7 @@ node_name={{ repmgr_node_name }}
 {% endif %}
 
 # Connection information
-#conninfo='host=192.168.204.104'
+conninfo='host={{ repmgr_node_name }}'
 rsync_options=--archive --checksum --compress --progress --rsh="ssh -o \"StrictHostKeyChecking no\""
 ssh_options=-o "StrictHostKeyChecking no"
 
