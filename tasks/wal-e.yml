@@ -4,5 +4,6 @@
     - pv
     - python-pip
     - python-dev
+    - python-lxml
 
 - pip: name=wal-e version={{ wal_e.config.version }}
