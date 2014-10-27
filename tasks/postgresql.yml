@@ -3,7 +3,7 @@
 # works around https://github.com/ansible/ansible/issues/8161 where large
 # numbers are converted to scientific notation.
 - shell: expr `getconf _PHYS_PAGES` / 2 * `getconf PAGE_SIZE`
-  register: shmmaxcfg
+  register: dynamic_shmmax
 
 - template: src=sysctl-shm.conf.j2 dest=/etc/sysctl.d/30-postgresql-shm.conf
   notify: execute sysctl
