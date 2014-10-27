@@ -15,5 +15,5 @@
 - include: configure.yml
   tags: [postgresql, postgresql-configure]
 
-- include: tools
+- include: tools.yml
   tags: postgresql
