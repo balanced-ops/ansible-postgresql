@@ -5,3 +5,8 @@ check process postgresql with pidfile /var/run/postgresql/{{ postgresql.version 
     if failed host localhost port {{ postgresql.config.port }} protocol pgsql then restart
     if failed host localhost port {{ postgresql.config.port }} protocol pgsql then alert
     if 5 restarts within 5 cycles then timeout
+
+{% if postgresql.role == 'slave' %}
+check program postgresql-replication with path /usr/local/bin/postgresql-replication-monitoring.sh
+    if status != 0 then alert
+{% endif %}

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+threshold={{ postgresql_max_replication_delay_seconds }}
+delay=`psql -U {{ postgresql.user }} -t <<EOF
+SELECT EXTRACT(EPOCH FROM NOW() - pg_last_xact_replay_timestamp())
+EOF`
+
+if [ $(echo "$delay > $threshold" | bc) -ne 0 ]
+then
+    echo "ERR: $delay > $threshold";
+    exit 1
+fi
+
+echo "OK: $delay < $threshold"
+exit 0

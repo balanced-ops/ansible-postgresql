@@ -84,3 +84,5 @@
 - template: src=postgresql/monit.conf.j2 dest=/etc/monit/conf.d/postgresql.conf
   notify:
     - restart monit
+
+- template: src=postgresql/replication-monitoring.sh.j2 dest=/usr/local/bin/postgresql-replication-monitoring.sh mode=0755

@@ -160,3 +160,8 @@ wal_e:
     AWS_SECRET_ACCESS_KEY: "an IAM aws secret access key"
     WALE_S3_PREFIX: s3://your-bucket-name
     WALE_S3_SUFFIX: foo
+
+
+# this should be set to just above max_standby_archive_delay and max_standby_streaming_delay
+# if this number goes above those it will cause monit to alert
+postgresql_max_replication_delay_seconds: 500

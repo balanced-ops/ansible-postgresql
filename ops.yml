@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: db
   sudo: yes
   vars_files:
     - ./defaults/main.yml
