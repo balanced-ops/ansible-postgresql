@@ -9,6 +9,9 @@
 - service: name=postgresql state=stopped
   when: ops_command == 'wal-e-restore' or ops_command == 'repmgr-restore'
 
+- monit: name=postgresql state=unmonitored
+  when: ops_command == 'wal-e-restore' or ops_command == 'repmgr-restore' or ops_command='unmonitor'
+
 - name: wal-e base backup
   shell: wal-e backup-push
   sudo: yes
@@ -29,3 +32,6 @@
 
 - service: name=postgresql state=restarted
   when: ops_command == 'wal-e-restore' or ops_command == 'repmgr-restore'
+
+- monit: name=postgresql state=monitored
+  when: ops_command == 'wal-e-restore' or ops_command == 'repmgr-restore' or ops_command='monitor'

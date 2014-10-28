@@ -80,3 +80,7 @@
     - postgresql.conf
     - pg_hba.conf
     - pg_ident.conf
+
+- template: src=postgresql/monit.conf.j2 dest=/etc/monit/conf.d/postgresql.conf
+  notify:
+    - restart monit

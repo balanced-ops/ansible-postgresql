@@ -7,3 +7,6 @@
 
 - name: execute sysctl
   command: /sbin/sysctl -p /etc/sysctl.d/30-postgresql-shm.conf
+
+- name: restart monit
+  service: name=monit state=restarted
