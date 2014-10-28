@@ -4,14 +4,22 @@
 # numbers are converted to scientific notation.
 - shell: expr `getconf _PHYS_PAGES` / 2 * `getconf PAGE_SIZE`
   register: dynamic_shmmax
+  changed_when: false
 
 - template: src=sysctl-shm.conf.j2 dest=/etc/sysctl.d/30-postgresql-shm.conf
   notify: execute sysctl
 
 - command: /sbin/sysctl -p /etc/sysctl.d/30-postgresql-shm.conf
 
+- action: shell /usr/bin/getent passwd {{ postgresql.user }} | /usr/bin/wc -l | tr -d ' '
+  register: user_exists
+  changed_when: false
+
 - group: name={{ postgresql.group }}
+  when: user_exists.stdout == 0
+
 - user: name={{ postgresql.user }} group={{ postgresql.group }} home={{ postgresql.config.data_dir }}
+  when: user_exists.stdout == 0
 
 - file: path={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main state=directory owner={{ postgresql.user }} recurse=yes
 
