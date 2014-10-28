@@ -7,9 +7,9 @@ EOF`
 
 if [ $(echo "$delay > $threshold" | bc) -ne 0 ]
 then
-    echo "ERR: $delay > $threshold";
+    echo "ERR: $delay > $threshold" >&2;
     exit 1
 fi
 
-echo "OK: $delay < $threshold"
+echo "OK: $delay < $threshold" >&2
 exit 0
