@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Balanced
-  description: Ansible role to configure postgressql
+  description: Ansible role to configure PostgreSQL
   license: MIT
   min_ansible_version: 1.6
   platforms:
