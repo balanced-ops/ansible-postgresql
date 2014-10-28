@@ -1,0 +1,31 @@
+---
+
+- name: promote server
+  command: pg_ctl promote -D {{ postgresql.config.data_dir }}/{{ postgresql.version }}/main
+  sudo: yes
+  sudo_user: "{{ postgresql.user }}"
+  when: ops_command == 'promote'
+
+- service: name=postgresql state=stopped
+  when: ops_command == 'wal-e-restore' or ops_command == 'repmgr-restore'
+
+- name: wal-e base backup
+  shell: wal-e backup-push
+  sudo: yes
+  sudo_user: "{{ postgresql.user }}"
+  when: ops_command == 'wal-e-backup'
+
+- name: restore from wal-e
+  shell: WALE_S3_PREFIX='{{ ops_wal_e_path }}' wal-e backup-fetch {{ postgresql.config.data_dir }} LATEST
+  sudo: yes
+  sudo_user: "{{ postgresql.user }}"
+  when: ops_command == 'wal-e-restore'
+
+- name: restore from repmgr
+  command: repmgr -f {{ repmgr.config.conf_dir }}/repmgr.conf -D {{ postgresql.config.data_dir }} standby clone {{ ops_repmgr_master }} --verbose --force --ignore-rsync-warning
+  sudo: yes
+  sudo_user: "{{ postgresql.user }}"
+  when: ops_command == 'repmgr-restore'
+
+- service: name=postgresql state=restarted
+  when: ops_command == 'wal-e-restore' or ops_command == 'repmgr-restore'

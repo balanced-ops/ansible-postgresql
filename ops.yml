@@ -1,0 +1,13 @@
+---
+- hosts: all
+  sudo: yes
+  vars_files:
+    - ./defaults/main.yml
+  vars_prompt:
+    ops_command: "which command would you like to run [wal-e-restore|repmgr-restore|promote]?"
+    ops_wal_e_path: "path to wal-e? e.g. s3://balanced-wal-e/prod-live"
+    ops_repmgr_master: "path to repmgr master db? e.g. 10.20.30.20"
+  handlers:
+    - include: ./handlers/main.yml
+  tasks:
+    - include: ./tasks/ops.yml

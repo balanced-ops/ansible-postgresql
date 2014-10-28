@@ -3,6 +3,11 @@
 shmmax: 2147483648  # 2 * (1024 ^ 3)
 shmall: 4194304
 
+# these settings are pretty conservative. we increase shared_buffers to 1/4 of
+# memory in production and also bump work_mem and temp_buffers.
+# effective_cache_size should be reduced if this server is not dedicated for
+# only postgresql.
+# https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server
 postgresql:
   version: 9.1
   repo: 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
@@ -23,8 +28,6 @@ postgresql:
     port: 5432
 
     # - Memory -
-    # https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server
-    # set to "{{ (ansible_memtotal_mb / 4) | int }}MB" in prod
     shared_buffers: "{{ (ansible_memtotal_mb / 5) | int }}MB"
     work_mem: 1MB
     temp_buffers: 8MB
@@ -96,6 +99,7 @@ postgresql_user:
   id_rsa_pub: "some ssh public key here"
   authorized_keys: "some ssh publick key here"
 
+# specify access control rules for postgres here.
 postgresql_hba:
   - type: host
     database: all
@@ -113,11 +117,14 @@ postgresql_hba:
     address: 10.0.0.0/8
     method: trust
 
+# if specified will be created in the database cluster, will require a matching
+# user with the same name.
 postgresql_databases: []
 #    - repmgr
 #    - balanced
 #    - precog
 
+# if specified, will be created in the database cluster
 postgresql_users: []
 #    - repmgr
 #    - balanced
@@ -132,16 +139,19 @@ repmgr:
     cluster_name: test
     log_directory: '/var/log/postgresql'
 
+# set these values per-host. they are used by repmgr for cluster coordination
 repmgr_node_id:
 repmgr_node_name:
 
-# if streaming replication from another server, put the master server here.
+# if streaming replication from another server, put the master server here, this
+# will be written into recovery.conf if it is not controller via repmgr.
 postgresql_repl_master:
 
     host:
     port:
     user:
 
+# wal-e will stream WAL logs to S3
 wal_e:
 
   config:
