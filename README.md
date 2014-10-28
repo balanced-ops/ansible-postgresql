@@ -17,10 +17,6 @@ This playbook was tested on Ubuntu 12.04 x86_64.
 
 This playbook requires Ansible 1.2 or higher.
 
-## group_vars
-
-Variables which can be configured are located in the `group_vars/all` file.
-
 Supported PostgreSQL versions:
 
 * `9.1`
@@ -30,8 +26,13 @@ Supported PostgreSQL versions:
 ## Running playbook
 
 ```bash
-ansible-playbook -i ansible.host setup.yml
+ansible-playbook -i ansible.host ./tasks/main.yml
 ```
+
+## See also
+
+You'll probably want to put a [pgbouncer](https://github.com/balanced-ops/ansible-pgbouncer)
+instance in front of Postgres, this makes server maintenance much easier.
 
 ## License
 
