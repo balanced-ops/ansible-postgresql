@@ -15,7 +15,7 @@ This playbook was tested on Ubuntu 12.04 x86_64.
 
 ## Requirements
 
-This playbook requires Ansible 1.2 or higher.
+This playbook requires Ansible 1.6 or higher.
 
 Supported PostgreSQL versions:
 
