@@ -66,7 +66,7 @@ max_connections = {{ postgresql.config.max_connections }}			# (change requires r
 # connection slot, plus lock space (see max_locks_per_transaction).
 #superuser_reserved_connections = 3	# (change requires restart)
 unix_socket_directory = '/var/run/postgresql'		# (change requires restart)
-{% if postgresql.version | version_compare('8.3', '>=') %}
+{% if postgresql.version | version_compare('9.3', '>=') %}
 unix_socket_directories = '/var/run/postgresql'		# (change requires restart)
 {% else %}
 unix_socket_directory = '/var/run/postgresql'          # (change requires restart)
