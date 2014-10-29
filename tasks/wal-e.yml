@@ -7,3 +7,6 @@
     - python-lxml
 
 - pip: name=wal-e version={{ wal_e.config.version }}
+
+# appears that pip does not correctly fix up the paths
+- easy_install: name=wal-e
