@@ -16,10 +16,10 @@
   changed_when: false
 
 - group: name={{ postgresql.group }}
-  when: user_exists.stdout == 0
+  when: user_exists.stdout == '0'
 
 - user: name={{ postgresql.user }} group={{ postgresql.group }} home={{ postgresql.config.data_dir }}
-  when: user_exists.stdout == 0
+  when: user_exists.stdout == '0'
 
 - file: path={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main state=directory owner={{ postgresql.user }} recurse=yes
 
