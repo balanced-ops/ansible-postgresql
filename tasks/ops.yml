@@ -25,7 +25,7 @@
   when: ops_command == 'wal-e-restore'
 
 - name: restore from repmgr
-  command: repmgr -f {{ repmgr.config.conf_dir }}/repmgr.conf -D {{ postgresql.config.data_dir }} standby clone {{ ops_repmgr_master }} --verbose --force --ignore-rsync-warning
+  command: repmgr -f {{ repmgr.config.conf_dir }}/repmgr.conf -D {{ postgresql.config.data_dir }} standby clone {{ ops_repmgr_master }} --verbose --force --ignore-rsync-warning -U {{ ops_repmgr_user }} -d {{ ops_repmgr_db }}
   sudo: yes
   sudo_user: "{{ postgresql.user }}"
   when: ops_command == 'repmgr-restore'
