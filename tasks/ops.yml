@@ -1,7 +1,7 @@
 ---
 
 - name: promote server
-  command: pg_ctl promote -D {{ postgresql.config.data_dir }}/{{ postgresql.version }}/main
+  command: /usr/lib/postgresql/{{ postgresql.version }}/bin/pg_ctl promote -D {{ postgresql.config.data_dir }}/{{ postgresql.version }}/main
   sudo: yes
   sudo_user: "{{ postgresql.user }}"
   when: ops_command == 'promote'
