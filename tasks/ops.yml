@@ -11,6 +11,7 @@
 
 - monit: name=postgresql state=unmonitored
   when: ops_command == 'wal-e-restore' or ops_command == 'repmgr-restore' or ops_command == 'unmonitor'
+  ignore_errors: yes
 
 - name: wal-e base backup
   shell: wal-e backup-push
