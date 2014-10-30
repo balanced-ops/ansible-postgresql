@@ -24,11 +24,11 @@
 - file: path={{ postgresql.config.data_dir }}/{{ postgresql.version }}/main state=directory owner={{ postgresql.user }} recurse=yes
 
 - name: Install Postgresql server and client
-  apt: pkg={{ item }}-{{ postgresql.version }} state=installed
+  apt: pkg={{ item }} state=installed
   register: postgresql_install
   with_items:
-    - postgresql
-    - postgresql-contrib
+    - postgresql-{{ postgresql.version }}
+    - postgresql-contrib-{{ postgresql.version }}
   tags:
     - packages
 
@@ -37,6 +37,14 @@
   when: postgresql.install_development_headers == true
   with_items:
     - libpq-dev
+  tags:
+    - packages
+
+- name: install io monitoring tools
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - iotop
+    - sysstat
   tags:
     - packages
 
