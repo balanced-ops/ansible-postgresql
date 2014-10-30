@@ -3,7 +3,7 @@
 ###################################################
 
 # Cluster name
-cluster={{ repmgr_cluster_name | default(repmgr.config.cluster_name) }}
+cluster={{ repmgr_cluster_name | default(repmgr.config.cluster_name) | replace('-', '_') | replace('.', '_') | replace(' ', '_') }}
 
 # Node ID
 {% if repmgr_node_id %}
