@@ -45,6 +45,7 @@
   with_items:
     - iotop
     - sysstat
+    - iftop
   tags:
     - packages
 

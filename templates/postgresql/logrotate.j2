@@ -2,8 +2,9 @@
     daily
     rotate 10
     copytruncate
-    delaycompress
     compress
     notifempty
     missingok
+    postrotate
+        /etc/init.d/postgresql reload
 }
