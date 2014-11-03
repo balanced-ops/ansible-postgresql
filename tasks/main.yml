@@ -17,3 +17,6 @@
 
 - include: tools.yml
   tags: [postgresql]
+
+- include: munin.yml
+  tags: [postgresql, postgresql-munin]
