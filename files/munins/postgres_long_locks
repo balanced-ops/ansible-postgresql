@@ -1,0 +1,37 @@
+#!/bin/bash
+
+case $1 in
+    config)
+        cat <<EOF
+graph_title PostgreSQL long locks
+graph_vlabel locks
+graph_category postgresql
+graph_info Shows the number of locks active for longer than 60 seconds, exclusive of locks held by a shell (hopefully).
+locks.label Locks
+locks.info Exclusive locks held for longer than 60 seconds.
+locks.critical 1
+EOF
+        exit 0;;
+esac
+locks=`psql -U postgres -t <<EOF
+SELECT count(*) from (
+    SELECT pg_stat_activity.datname,
+           pg_locks.mode,
+           pg_locks.granted,
+           pg_stat_activity.usename,
+           substr(pg_stat_activity.current_query,1,30),
+           age(now(),pg_stat_activity.query_start) AS "age",
+           pg_stat_activity.procpid
+    FROM pg_stat_activity,
+         pg_locks LEFT
+    OUTER JOIN pg_class ON (pg_locks.relation = pg_class.oid)
+    WHERE pg_locks.pid=pg_stat_activity.procpid
+      AND mode ilike '%Exclusive%'
+      AND age(now(),pg_stat_activity.query_start) >= ('60 seconds')::interval
+      -- Assuming these are idle shell sessions
+      AND substr(pg_stat_activity.current_query,1,30) != '<IDLE> in transaction'
+    ORDER BY query_start
+) locks;
+EOF`
+
+echo locks.value $locks

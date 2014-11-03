@@ -1,0 +1,15 @@
+---
+
+- name: install perl and cpanm
+  apt:
+    pkg: "{{item}}"
+    state: installed
+    update-cache: yes
+  with_items:
+    - perl
+    - curl
+    - cpanminus
+    - gettext
+
+- name: install munin db plugins dependencies
+  cpanm: name='DBD::Pg' notest=True
