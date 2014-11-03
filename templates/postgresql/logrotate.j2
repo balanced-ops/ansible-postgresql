@@ -5,6 +5,7 @@
     compress
     notifempty
     missingok
+    create 0664 {{ postgresql.user }} {{ postgresql.group }}
     postrotate
         /etc/init.d/postgresql reload
 }
