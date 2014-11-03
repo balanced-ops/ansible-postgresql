@@ -5,6 +5,9 @@ python:
 
 install:
   - pip install ansible
+  - mkdir -p roles
+  - git clone https://github.com/ANXS/monit.git roles/monit
+  - git clone https://github.com/geerlingguy/ansible-role-munin-node.git roles/munin-node
 
 script:
   - ansible-playbook -clocal -i tests/ansible.inventory test.yml --syntax-check
