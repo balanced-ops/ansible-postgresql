@@ -13,3 +13,24 @@
 
 - name: install munin db plugins dependencies
   cpanm: name='DBD::Pg' notest=True
+
+- name: copy munin plugins to destination
+  copy: src=files/munins/{{ item }} dest={{ munin_plugin_dest_path }}
+  with_items:
+    - pg__connections
+    - postgres_locks
+    - postgres_long_locks
+    - postgresql_active_backends
+    - postgresql_active_backends_by_database
+    - postgresql_active_locks
+    - postgresql_database_ratio
+    - postgresql_database_size
+    - postgresql_tablespace_size
+    - postgresql_transactions
+
+- name: copy multi-munin graph plugins to destination
+  copy: src=files/munins/{{ item }} dest={{ munin_plugin_dest_path }}
+  with_nested:
+    - [postgres_block_read_, postgres_queries2_, postgres_queries3_,
+       postgres_size_detail_, postgres_space_, postgres_tuplesratio_]
+    - [1, 2, 3]
