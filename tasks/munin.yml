@@ -32,7 +32,7 @@
     - postgresql_transactions
 
 - name: enable munin plugins
-- file: src={{ munin_plugin_src_path }}{{ item }} dest={{ munin_plugin_dest_path }}{{ item }} state=link
+  file: src={{ munin_plugin_src_path }}{{ item }} dest={{ munin_plugin_dest_path }}{{ item }} state=link
   with_items:
     - pg__connections
     - postgres_locks
@@ -72,7 +72,7 @@
   when: database_names.stdout
 
 - name: enable munin plugins
-- file: src={{ munin_plugin_src_path }}{{ item[0] }}{{ item[1] }} dest={{ munin_plugin_dest_path }}{{ item[0] }}{{ item[1] }} state=link
+  file: src={{ munin_plugin_src_path }}{{ item[0] }}{{ item[1] }} dest={{ munin_plugin_dest_path }}{{ item[0] }}{{ item[1] }} state=link
   with_nested:
     - [postgres_block_read_,
        postgres_queries2_,
