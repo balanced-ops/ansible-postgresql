@@ -165,3 +165,7 @@ wal_e:
 # this should be set to just above max_standby_archive_delay and max_standby_streaming_delay
 # if this number goes above those it will cause monit to alert
 postgresql_max_replication_delay_seconds: 500
+
+# enable munin-node graphs for this postgresql installation
+# requires munin-node agent to be on the postgresql machine node
+munin_node_enabled: false

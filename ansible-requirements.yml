@@ -1,0 +1,7 @@
+---
+
+  - src: ANXS.monit
+    name: monit
+
+  - src: geerlingguy.munin-node
+    name: munin-node
