@@ -10,6 +10,8 @@
     - curl
     - cpanminus
     - gettext
+    - libdbi-perl
+    - libdbd-pg-perl
 
 - name: install munin db plugins dependencies
   cpanm: name='DBD::Pg' notest=True
@@ -28,9 +30,21 @@
     - postgresql_tablespace_size
     - postgresql_transactions
 
+- name: fetch databases names from local postgres (exclude templates)
+  shell:  >
+    psql -t -c "
+    SELECT datname
+      FROM pg_database
+     WHERE datistemplate = false;" | tr -d ' '
+  sudo_user: postgres
+  register: database_names
+
 - name: copy multi-munin graph plugins to destination
-  copy: src=files/munins/{{ item }} dest={{ munin_plugin_dest_path }}
+  copy: >
+    src=files/munins/{{ item[0] }}
+    dest={{ munin_plugin_dest_path }}{{ item[0] }}{{ item[1] }}
   with_nested:
     - [postgres_block_read_, postgres_queries2_, postgres_queries3_,
        postgres_size_detail_, postgres_space_, postgres_tuplesratio_]
-    - [1, 2, 3]
+    - "{{ database_names.stdout_lines }}"
+  when: database_names.stdout
