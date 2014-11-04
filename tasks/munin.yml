@@ -39,12 +39,16 @@
   sudo_user: postgres
   register: database_names
 
-- name: copy multi-munin graph plugins to destination
+- name: copy multi-munin graph plugins for each database
   copy: >
     src=files/munins/{{ item[0] }}
     dest={{ munin_plugin_dest_path }}{{ item[0] }}{{ item[1] }}
   with_nested:
-    - [postgres_block_read_, postgres_queries2_, postgres_queries3_,
-       postgres_size_detail_, postgres_space_, postgres_tuplesratio_]
+    - [postgres_block_read_,
+       postgres_queries2_,
+       postgres_queries3_,
+       postgres_size_detail_,
+       postgres_space_,
+       postgres_tuplesratio_]
     - "{{ database_names.stdout_lines }}"
   when: database_names.stdout
