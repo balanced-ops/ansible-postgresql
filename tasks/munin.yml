@@ -44,7 +44,7 @@
     - postgresql_database_size
     - postgresql_tablespace_size
     - postgresql_transactions
-  notifies:
+  notify:
     - restart munin
 
 - name: fetch databases names from local postgres (exclude templates)
@@ -82,5 +82,5 @@
        postgres_tuplesratio_]
     - "{{ database_names.stdout_lines }}"
   when: database_names.stdout
-  notifies:
+  notify:
     - restart munin
