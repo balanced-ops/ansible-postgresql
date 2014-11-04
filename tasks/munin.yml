@@ -17,7 +17,7 @@
   cpanm: name='DBD::Pg' notest=True
 
 - name: copy munin plugins to destination
-  copy: src=files/munins/{{ item }} dest={{ munin_plugin_dest_path }}
+  copy: src=munins/{{ item }} dest={{ munin_plugin_dest_path }} mode=0755
   with_items:
     - pg__connections
     - postgres_locks
@@ -41,8 +41,9 @@
 
 - name: copy multi-munin graph plugins for each database
   copy: >
-    src=files/munins/{{ item[0] }}
+    src=munins/{{ item[0] }}
     dest={{ munin_plugin_dest_path }}{{ item[0] }}{{ item[1] }}
+    mode=0755
   with_nested:
     - [postgres_block_read_,
        postgres_queries2_,
