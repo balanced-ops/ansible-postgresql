@@ -77,7 +77,7 @@
   tags:
     - configuration
 
-- command: /usr/lib/postgresql/9.1/bin/pg_ctl initdb -D {{ postgresql.config.data_dir }}/{{ postgresql.version }}/main
+- command: /usr/lib/postgresql/{{ postgresql.version }}/bin/pg_ctl initdb -D {{ postgresql.config.data_dir }}/{{ postgresql.version }}/main
   sudo: yes
   sudo_user: "{{ postgresql.user }}"
   when: pgd.stat.exists == false
