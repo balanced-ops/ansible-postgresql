@@ -214,7 +214,7 @@ archive_timeout = {{ postgresql.config.archive_timeout }}		# force a logfile seg
 max_wal_senders = {{ postgresql.config.max_wal_senders }}		# max number of walsender processes
 				# (change requires restart)
 wal_keep_segments = {{ postgresql.config.wal_keep_segments }}		# in logfile segments, 16MB each; 0 disables
-{% if postgresql.version | version_compare('9.3', '<=') %}
+{% if postgresql.version | version_compare('9.2', '<=') %}
 replication_timeout = {{ postgresql.config.replication_timeout }}	# in milliseconds; 0 disables
 {% endif %}
 
