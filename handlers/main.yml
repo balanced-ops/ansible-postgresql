@@ -1,9 +1,11 @@
 ---
 - name: restart postgresql
   service: name=postgresql state=restarted
+  when: postgresql_enabled
 
 - name: reload postgresql
   service: name=postgresql state=reloaded
+  when: postgresql_enabled
 
 - name: execute sysctl
   command: /sbin/sysctl -p /etc/sysctl.d/30-postgresql-shm.conf

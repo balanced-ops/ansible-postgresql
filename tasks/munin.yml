@@ -55,6 +55,7 @@
      WHERE datistemplate = false;" | tr -d ' '
   sudo_user: postgres
   register: database_names
+  when: postgresql_enabled
 
 - name: copy multi-munin graph plugins for each database
   copy: >
@@ -69,7 +70,8 @@
        postgres_space_,
        postgres_tuplesratio_]
     - "{{ database_names.stdout_lines }}"
-  when: database_names.stdout
+  when: postgresql_enabled and database_names.stdout
+
 
 - name: enable munin plugins
   file: src={{ munin_plugin_src_path }}{{ item[0] }}{{ item[1] }} dest={{ munin_plugin_dest_path }}{{ item[0] }}{{ item[1] }} state=link
@@ -81,6 +83,6 @@
        postgres_space_,
        postgres_tuplesratio_]
     - "{{ database_names.stdout_lines }}"
-  when: database_names.stdout
+  when: postgresql_enabled and database_names.stdout
   notify:
     - restart munin

@@ -169,3 +169,6 @@ postgresql_max_replication_delay_seconds: 500
 # enable munin-node graphs for this postgresql installation
 # requires munin-node agent to be on the postgresql machine node
 munin_node_enabled: false
+
+# when set to false, ansible will not try to start or monitor postgres
+postgresql_enabled: yes
