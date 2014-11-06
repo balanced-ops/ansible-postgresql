@@ -1,3 +1,14 @@
 ---
 
 - pip: name=pg_activity
+  tags:
+    - packages
+
+- name: install io monitoring tools
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - iotop
+    - sysstat
+    - iftop
+  tags:
+    - packages
