@@ -49,6 +49,7 @@ postgresql:
     # - replication -
     max_wal_senders: 10
     wal_keep_segments: 5000
+    # not applicable for version 9.3 and above
     replication_timeout: 60s
 
     # master server
